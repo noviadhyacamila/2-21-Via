@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Contact;
+use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    /** 
-     * Display a listing of the resource
-     * 
-     * @return Illuminate\Http\Response
-    */
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        return view('contacts', [
-            "title" => "Contacts"
+        return view('contact',[
+            "title" => "Contact"
         ]);
     }
 
@@ -37,11 +37,10 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
         $contact = Contact::create($request->all());
         $contact->save();
 
-        return redirect('contacts');
+        return redirect('contact');
     }
 
     /**
@@ -52,7 +51,7 @@ class ContactController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -63,7 +62,11 @@ class ContactController extends Controller
      */
     public function edit($id)
     {
-        //
+        $contact = Contact::where('id',$id)->get();
+
+        return view('admin.edit',[
+            'contact' => $contact
+        ]);
     }
 
     /**
@@ -73,9 +76,15 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        Contact::where('id',$request->id)->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan
+        ]);
+
+        return redirect('home');
     }
 
     /**
@@ -86,6 +95,10 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        //
+    
+        Contact::where('id',$id)->delete();
+
+        return redirect()->back();
+
     }
 }
